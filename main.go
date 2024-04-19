@@ -24,36 +24,27 @@ func main() {
 
 		fmt.Printf("%d ning faktoriali: %d\n", n, <-c) // natijani channel dan olib konsolga chiqaramiz
 	} else if check == 2 {
-		// O'qiladigan fayllar ro'yxati
 		files := []string{"fayl/file1.txt", "fayl/file2.txt", "fayl/file3.txt"}
 
-		// Natijalarni saqlash uchun kanal
 		results := make(chan string)
 
-		// Kutuvchi guruh
 		var wg sync.WaitGroup
 
-		// Mutex to protect access to the output file
-
-		// Har bir fayl uchun goroutine ishga tushiring
 		for _, file := range files {
 			wg.Add(1)
 			go func(file string) {
 				defer wg.Done()
 
-				// Faylni o'qing
 				content, err := os.ReadFile(file)
 				if err != nil {
 					fmt.Println(err)
 					return
 				}
 
-				// Natijani kanalda yuboring
 				results <- string(content)
 			}(file)
 		}
 
-		// Natijalarni faylga yozing
 		outputFile, err := os.Create("combined_results.txt")
 		if err != nil {
 			fmt.Println(err)
